@@ -33,6 +33,7 @@ int score = 0;
 Blob blob = {3, 6, 3, 2};
 Bullet bullet = {5, 6, false};
 struct Alien aliens[4];
+boolean alienRight = false;
 
 //void drawBlob(int x, int y) {
 //  gamer.display[x][y] =1;
@@ -83,7 +84,12 @@ void drawAliens() {
 }
 
 void moveAliens() {
-  
+  for(int i = 0; i < 4; i++) {
+    aliens[i].x++;
+    alienRight == !alienRight;
+    
+  }
+   
 }
 
 
@@ -128,6 +134,7 @@ void loop() {
   resetBullet(bullet.x, bullet.y);
   gamer.updateDisplay();
   delay(100);
+  moveAliens();
 //updateAliens();
   //animateAlien();
   blobControl();
