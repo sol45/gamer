@@ -10,6 +10,7 @@ struct Alien {
   int x;
   int y;
   boolean movingRight;
+  
 };
 
 struct Blob {
@@ -22,13 +23,13 @@ struct Blob {
 struct Bullet {
   int x;
   int y;
+  boolean shot;
 };
 
 Blob blob = {3, 6, 3, 2};
-Bullet bullet = {blob.x+1, 5};
-
+Bullet bullet = {5, 6, false};
 Alien alien = {0, 0, true};
-boolean shot = false;
+
 
 void drawBlob(int x, int y) {
   gamer.display[x][y] =1;
@@ -37,6 +38,12 @@ void drawBlob(int x, int y) {
 void drawAlien(int x, int y) {
   gamer.display[x][y] =1;
 }
+
+void resetBullet(int x, int y) {
+  gamer.display[x][y] = 1;
+}
+
+
 void animateAlien() {
   if(alien.x < 7 && alien.movingRight == true) { alien.x++;
   }
@@ -54,7 +61,6 @@ void drawRect() {
 
 }
  
-
 void blobControl() {
   if (gamer.isHeld(RIGHT) && blob.x != 5) {blob.x++;
   }
@@ -65,33 +71,29 @@ void blobControl() {
 }
 
 
-//void shoot() {
-// if (gamer.isPressed(UP)) {shot = true;
-// }
-//  while(shot == true) {
-//    
-//    gamer.display[blob.x + 1][y];
- //   y--;
- //   }
-///    delay(100);
-//    shot = !shot;
+void shoot() {
+    if(gamer.isPressed(UP)) { bullet.shot = true;
+    }
+    if(bullet.y <= 6 && bullet.shot == true) { bullet.y-- ;
+  }    
+    if(bullet.y == -2) {bullet.shot = false; bullet.y = 6;
+    }
+   // if(bullet.shot = false) { bullet.x = blob.x + 1;
+   // }
 
-
-//}
-
-void fire(int x, int y) {
-  gamer.display[x][y] = 1;
 }
+
 
 void loop() {
   gamer.clear();
   drawRect();
   drawAlien(alien.x, alien.y);
+  resetBullet(blob.x + 1, bullet.y);
   gamer.updateDisplay();
   delay(100);
   animateAlien();
   blobControl();
-  fire(bullet.x, bullet.y);
+  shoot();
  
 }
 
