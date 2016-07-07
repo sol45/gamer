@@ -140,7 +140,11 @@ void shoot() {
     }
     if(bullet.y <= 6 && bullet.shot == true) { bullet.y-- ;
   }    
+     if(bullet.y == -1) {bullet.shot = false; 
+     bullet.y = 6;
+     }
     if(bullet.shot == false) {bullet.x = blob.x + 1;
+   
     }
 
 }
@@ -154,7 +158,7 @@ void detectImpact() {
       bullet.y = 6;
       aliens[i][j].dead = true;
       score = score + 5;
-      resetBullet(bullet.x, bullet.y);
+      resetBullet(blob.x + 1, bullet.y);
       }
      } 
   }
