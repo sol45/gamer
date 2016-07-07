@@ -29,12 +29,15 @@ struct Bullet {
   int y;
   boolean shot;
 };
-
-int aliensPerRow = 4;
+const int aliensPerRow = 4;
 int score = 0;
 Blob blob = {3, 6, 3, 2};
 Bullet bullet = {5, 6, false};
-struct Alien aliens[4];
+//struct Alien alien1[1]
+//struct Alien alien2[2]
+//struct Alien alien3[3]
+//struct Alien alien4[4]
+struct Alien aliens[aliensPerRow];
 boolean alienRight = true;
 
 //void drawBlob(int x, int y) {
@@ -71,14 +74,14 @@ void drawRect() {
 
 void makeAliens() {
    int x = 0;
-   for(int i = 0; i < 4 ;i++) {
+   for(int i = 0; i < aliensPerRow ;i++) {
    aliens[i]= {x, 0, true, false};
    x=x+2;
  
    }
 }
 void drawAliens() {
-  for(int i= 0; i < 4; i++) {
+  for(int i= 0; i < aliensPerRow; i++) {
     int x = aliens[i].x;
     int y = aliens[i].y; 
    gamer.display[x][y] = 1;
@@ -86,11 +89,12 @@ void drawAliens() {
 }
 
 void moveAliens() {
-  for(int i = 0; i < 4; i++) { 
+  for(int i = 0; i < aliensPerRow; i++) { 
     if(alienRight == true) {  
-    aliens[i].x = aliens[i].x + 1;
+    aliens[i].x = aliens[i].x + (-2 * aliensPerRow + 9);
     }
-    else {aliens[i].x--;
+    else {
+      aliens[i].x = aliens[i].x - (-2 * aliensPerRow + 9);
     }
   }
    alienRight = !alienRight;
