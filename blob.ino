@@ -31,12 +31,14 @@ struct Bullet {
   boolean shot;
 };
 const int aliensPerRow = 4;
-int gameSpeed = 20; //lower is faster
+int gameSpeed = 100; //lower is faster
 int score = 0;
 int counter = 0;
 Blob blob = {3, 6, 3, 2};
 Bullet bullet = {5, 6, false};
-struct Alien aliens[aliensPerRow];
+const int rows = 4;
+const int cols = 4;
+struct Alien aliens[rows][cols];
 boolean alienRight = true;
 boolean gameOver = false;
 
@@ -74,41 +76,50 @@ void drawRect() {
 
 void makeAliens() {
    int x = 0;
-   
-   for(int i = 0; i < aliensPerRow ;i++) {
-   aliens[i]= {x, 0, true, false};
-   x=x+2;
- 
+   int y = 0;
+   for(int i = 0; i < rows ;i++) {
+     for(int j = 0; j < cols ;j++) {
+       aliens[i][j]= {x, y, true, false, false};   
+       x=x+2;
+      }
+     x=0;
+     y++;
    }
 }
 void drawAliens() {
-  for(int i= 0; i < aliensPerRow; i++) {
-    int x = aliens[i].x;
-    int y = aliens[i].y; 
-   if(aliens[i].dead == false) {
-    gamer.display[x][y] = 1;
-   }
-   }
+  for(int i= 0; i < rows; i++) {
+    for(int j = 0; j < cols; j++) {
+      int x = aliens[i][j].x;
+      int y = aliens[i][j].y; 
+      //Serial.println("y" + y);
+      Serial.println(x);
+      if(aliens[i][j].dead == false) {
+       gamer.display[x][y] = 1;
+      }
+    }
   }
+}
 
 
 void moveAliens() {
-  for(int i = 0; i < aliensPerRow; i++) { 
-    if(alienRight == true) {  
-    aliens[i].x = aliens[i].x + (-2 * aliensPerRow + 9);
-    }
-    else {
-      aliens[i].x = aliens[i].x - (-2 * aliensPerRow + 9);
-    }
-    if(counter == gameSpeed) {
-      Serial.print("NEWLINE");
-      aliens[i].y++;
+  for(int i = 0; i < rows; i++) { 
+     for(int j = 0; j < cols; j++) {
+       if(alienRight == true) {  
+       aliens[i][j].x = aliens[i][j].x + (-2 * aliensPerRow + 9);
+       }
+       else {
+       aliens[i][j].x = aliens[i][j].x - (-2 * aliensPerRow + 9);
+       }
+      if(counter == gameSpeed) {
+      //Serial.print("NEWLINE");
+      aliens[i][j].y++;
       }
-      }
-     if(counter == gameSpeed) {
-      counter = 0; 
-     
+    }
   }
+    if(counter == gameSpeed) {
+    counter = 0;   
+    }
+   
    alienRight = !alienRight;
    counter++;
 }
@@ -129,8 +140,6 @@ void shoot() {
     }
     if(bullet.y <= 6 && bullet.shot == true) { bullet.y-- ;
   }    
-    if(bullet.y == -1) {bullet.shot = false; bullet.y = 6;
-    }
     if(bullet.shot == false) {bullet.x = blob.x + 1;
     }
 
@@ -139,22 +148,26 @@ void shoot() {
 
 void detectImpact() {
   for(int i = 0; i < aliensPerRow; i++) {
-    if(aliens[i].x == bullet.x && aliens[i].y == bullet.y) {
-      aliens[i].dead = true;
-      Serial.print("HIT");
+    for(int j = 0; j < cols; j++) {
+      if(aliens[i][j].x == bullet.x && aliens[i][j].y == bullet.y && aliens[i][j].dead == false) {
+      bullet.shot = false;
+      bullet.y = 6;
+      aliens[i][j].dead = true;
       score = score + 5;
-    }
+      resetBullet(bullet.x, bullet.y);
+      }
+     } 
   }
-  
 }
 
 void checkGame() {
-  for(int i = 0; i < aliensPerRow; i++) {
-    if(aliens[i].y >= 6) {
+ for(int i = 0; i < aliensPerRow; i++) {
+  for(int j = 0; j < cols; j++) {
+    if(aliens[i][j].y >= 6) {
       gameOver = true;
     }
+   }
   }
-
 }
 void loop() {
   if(gameOver == false) {
@@ -164,11 +177,11 @@ void loop() {
     drawAliens();
     resetBullet(bullet.x, bullet.y);
     gamer.updateDisplay();
-   delay(100);
-   detectImpact();
+    delay(100);
+    detectImpact();
     blobControl();
-   shoot();
-   checkGame();
+    shoot();
+    checkGame();
   }
 
   else {
