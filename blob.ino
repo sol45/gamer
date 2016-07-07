@@ -31,7 +31,7 @@ struct Bullet {
   boolean shot;
 };
 const int aliensPerRow = 4;
-int gameSpeed = 100; //lower is faster
+int gameSpeed = 30; //lower is faster
 int score = 0;
 int counter = 0;
 Blob blob = {3, 6, 3, 2};
@@ -41,6 +41,7 @@ const int cols = 4;
 struct Alien aliens[rows][cols];
 boolean alienRight = true;
 boolean gameOver = false;
+boolean newLine = false;
 
 //void drawBlob(int x, int y) {
 //  gamer.display[x][y] =1;
@@ -75,15 +76,25 @@ void drawRect() {
 
 
 void makeAliens() {
+   int offSet = 0;
    int x = 0;
    int y = 0;
-   for(int i = 0; i < rows ;i++) {
-     for(int j = 0; j < cols ;j++) {
-       aliens[i][j]= {x, y, true, false, false};   
-       x=x+2;
+   for(int i = 0; i < rows; i++) {
+       for(int j = 0; j < cols; j++) {
+         
+         aliens[i][j]= {x, y, true, false, false};   
+         x = x + 2 + offSet;
+         Serial.print(x);
+        }
+      x=0;
+      y++;
+      if(offSet == 0) {
+        offSet = 1;
       }
-     x=0;
-     y++;
+      else {
+        offSet = 0;
+      }
+      //newLine = !newLine;
    }
 }
 void drawAliens() {
@@ -92,7 +103,6 @@ void drawAliens() {
       int x = aliens[i][j].x;
       int y = aliens[i][j].y; 
       //Serial.println("y" + y);
-      Serial.println(x);
       if(aliens[i][j].dead == false) {
        gamer.display[x][y] = 1;
       }
@@ -167,7 +177,7 @@ void detectImpact() {
 void checkGame() {
  for(int i = 0; i < aliensPerRow; i++) {
   for(int j = 0; j < cols; j++) {
-    if(aliens[i][j].y >= 6) {
+    if(aliens[i][j].y >= 6 && aliens[i][j].dead == false) {
       gameOver = true;
     }
    }
