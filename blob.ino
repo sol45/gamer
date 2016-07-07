@@ -5,6 +5,7 @@ Gamer gamer;
 void setup() {
   gamer.begin();
   Serial.begin(9600);
+  makeAliens();
 };
 
 
@@ -29,11 +30,12 @@ struct Bullet {
   boolean shot;
 };
 
+int aliensPerRow = 4;
 int score = 0;
 Blob blob = {3, 6, 3, 2};
 Bullet bullet = {5, 6, false};
 struct Alien aliens[4];
-boolean alienRight = false;
+boolean alienRight = true;
 
 //void drawBlob(int x, int y) {
 //  gamer.display[x][y] =1;
@@ -84,14 +86,15 @@ void drawAliens() {
 }
 
 void moveAliens() {
-  for(int i = 0; i < 4; i++) {
-    aliens[i].x++;
-    alienRight == !alienRight;
-    
+  for(int i = 0; i < 4; i++) { 
+    if(alienRight == true) {  
+    aliens[i].x = aliens[i].x + 1;
+    }
+    else {aliens[i].x--;
+    }
   }
-   
+   alienRight = !alienRight;
 }
-
 
    
 void blobControl() {
@@ -128,18 +131,15 @@ void shoot() {
 void loop() {
   gamer.clear();
   drawRect();
-  //drawAlien(alien.x, alien.y);
-  makeAliens();
+  moveAliens();
   drawAliens();
   resetBullet(bullet.x, bullet.y);
   gamer.updateDisplay();
   delay(100);
-  moveAliens();
-//updateAliens();
-  //animateAlien();
+  
   blobControl();
   shoot();
-// detectImpact();
+
   
   
  
