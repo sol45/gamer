@@ -10,7 +10,7 @@ void setup() {
 };
 
 
-  struct Alien{
+struct Alien{
   int x;
   int y;
   boolean movingRight;
@@ -43,6 +43,7 @@ struct Alien aliens[rows][cols];
 boolean alienRight = true;
 boolean gameOver = false;
 boolean newLine = false;
+boolean started = false;
 
 //void drawBlob(int x, int y) {
 //  gamer.display[x][y] =1;
@@ -89,11 +90,11 @@ void makeAliens() {
           }
         x=0;
        y++;
-       if(offSet == 1) {
-         offSet = 0;
+        if(offSet == 1) {
+          offSet = 0;
         }
-        else {
-          offSet = 1;
+         else {
+            offSet = 1;
        }
     }
 }
@@ -117,10 +118,10 @@ void moveAliens() {
        if(alienRight == true) {  
        aliens[i][j].x = aliens[i][j].x + (-2 * aliensPerRow + 9);
        }
-       else {
-       aliens[i][j].x = aliens[i][j].x - (-2 * aliensPerRow + 9);
-       }
-      if(counter == gameSpeed) {
+         else {
+        aliens[i][j].x = aliens[i][j].x - (-2 * aliensPerRow + 9);
+         }
+       if(counter == gameSpeed) {
       //Serial.print("NEWLINE");
       aliens[i][j].y++;
       }
@@ -150,7 +151,7 @@ void shoot() {
     }
     if(bullet.y <= 6 && bullet.shot == true) { bullet.y-- ;
   }    
-     if(bullet.y == -1) {bullet.shot = false; 
+    if(bullet.y == -1) {bullet.shot = false; 
      bullet.y = 6;
      }
     if(bullet.shot == false) {bullet.x = blob.x + 1;
@@ -167,7 +168,7 @@ void detectImpact() {
       bullet.shot = false;
       bullet.y = 6;
       aliens[i][j].dead = true;
-      score = score + 5;
+      score = score + 1;
       resetBullet(blob.x + 1, bullet.y);
       }
      } 
@@ -179,10 +180,14 @@ void checkGame() {
   for(int j = 0; j < cols; j++) {
     if(aliens[i][j].y >= 6 && aliens[i][j].dead == false) {
       gameOver = true;
+    
+    
     }
    }
   }
-}
+  //if(gamer.isPressed(START)) {started = true;
+  }
+
 
 boolean nextLevel() {
   boolean allDead = true;
@@ -201,6 +206,8 @@ boolean nextLevel() {
 
 void loop() {
   if(gameOver == false) {
+    checkGame();
+ // if(started == true) {
     gamer.clear();
     drawRect();
     moveAliens();
@@ -211,28 +218,28 @@ void loop() {
     detectImpact();
     blobControl();
     shoot();
-    checkGame();
+    
     if(nextLevel() == true) {
       if(gameSpeed != 20) {
        gameSpeed = gameSpeed - 20;
        }
        counter = 0;
        gameOver = false;
-        newLine = false;
-        alienRight = true;
-        makeAliens();
-       Serial.println(gameSpeed);
+       newLine = false;
+       alienRight = true;
+       makeAliens();
       
       
     }
    
   }
-
-  else {
+    else {
+//  if(gameOver == true) {
     gamer.clear();
     gamer.showScore(score); 
     gamer.updateDisplay();
     delay(100);
+    
     
   }
   
