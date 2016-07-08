@@ -215,12 +215,13 @@ void loop() {
     if(nextLevel() == true) {
       if(gameSpeed != 20) {
        gameSpeed = gameSpeed - 20;
-      }
-      counter = 0;
-      //boolean newLine = false;
-      boolean alienRight = false;
-      makeAliens();
-      Serial.println(gameSpeed);
+       }
+       counter = 0;
+       gameOver = false;
+        newLine = false;
+        alienRight = true;
+        makeAliens();
+       Serial.println(gameSpeed);
       
       
     }
@@ -232,6 +233,7 @@ void loop() {
     gamer.showScore(score); 
     gamer.updateDisplay();
     delay(100);
+    
   }
   
   
