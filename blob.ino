@@ -30,6 +30,7 @@ struct Bullet {
   int x;
   int y;
   boolean shot;
+  
 };
 const int aliensPerRow = 4;
 int gameSpeed = 70; //lower is faster
@@ -43,7 +44,6 @@ struct Alien aliens[rows][cols];
 boolean alienRight = true;
 boolean gameOver = false;
 boolean newLine = false;
-boolean started = false;
 
 //void drawBlob(int x, int y) {
 //  gamer.display[x][y] =1;
@@ -188,6 +188,15 @@ void checkGame() {
   //if(gamer.isPressed(START)) {started = true;
   }
 
+void reset() {
+  counter = 0;
+  newLine = false;
+  alienRight = true;
+  score = 0;
+  gameSpeed = 70;
+  makeAliens();
+  gameOver = false;
+}
 
 boolean nextLevel() {
   boolean allDead = true;
@@ -207,7 +216,7 @@ boolean nextLevel() {
 void loop() {
   if(gameOver == false) {
     checkGame();
- // if(started == true) {
+  //if(started == true) {
     gamer.clear();
     drawRect();
     moveAliens();
@@ -234,16 +243,15 @@ void loop() {
    
   }
     else {
-//  if(gameOver == true) {
+    //if(gameOver == true) {
     gamer.clear();
     gamer.showScore(score); 
     gamer.updateDisplay();
-    delay(100);
-    
-    
+    delay(2000);
+    reset();  
   }
   
-  
+
  
 }
 
